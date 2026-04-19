@@ -136,6 +136,15 @@
   color: #444;
 }
 
+.error {
+  color: #c0392b;
+  background: #fdecea;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
 .deleteBtn {
   position: absolute;
   top: 0.75rem;

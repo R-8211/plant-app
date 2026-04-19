@@ -36,7 +36,12 @@ router.post('/:plantId', async (req, res) => {
 // 水やり記録削除
 router.delete('/:id', async (req, res) => {
   try {
-    await db.query('DELETE FROM waterings WHERE id = $1', [req.params.id]);
+    const { rowCount } = await db.query(
+      `DELETE FROM waterings w USING plants p
+       WHERE w.id = $1 AND w.plant_id = p.id AND p.user_id = $2`,
+      [req.params.id, req.userId]
+    );
+    if (rowCount === 0) return res.status(404).json({ error: 'Not found' });
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ error: err.message });

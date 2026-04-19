@@ -1,34 +1,48 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getPlant } from '../api/plants';
 import { getWaterings, createWatering, deleteWatering } from '../api/waterings';
 import styles from './PlantDetailPage.module.css';
 
 export default function PlantDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [plant, setPlant] = useState(null);
   const [waterings, setWaterings] = useState([]);
   const [form, setForm] = useState({ health_status: '', memo: '' });
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getWaterings(id).then(setWaterings);
+    getPlant(id).then(setPlant).catch(() => navigate('/'));
+    getWaterings(id).then(setWaterings).catch(() => {});
   }, [id]);
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    const record = await createWatering(id, form);
-    setWaterings(prev => [record, ...prev]);
-    setForm({ health_status: '', memo: '' });
+    setError('');
+    try {
+      const record = await createWatering(id, form);
+      setWaterings(prev => [record, ...prev]);
+      setForm({ health_status: '', memo: '' });
+    } catch {
+      setError('記録の追加に失敗しました。');
+    }
   };
 
   const handleDelete = async (wateringId) => {
-    await deleteWatering(wateringId);
-    setWaterings(prev => prev.filter(w => w.id !== wateringId));
+    try {
+      await deleteWatering(wateringId);
+      setWaterings(prev => prev.filter(w => w.id !== wateringId));
+    } catch {
+      setError('削除に失敗しました。');
+    }
   };
 
   return (
     <div className={styles.container}>
       <button className={styles.back} onClick={() => navigate('/')}>← 一覧へ戻る</button>
-      <h2>水やり記録</h2>
+      <h2>{plant ? plant.name : '読み込み中...'}</h2>
+      {plant?.species && <p className={styles.species}>{plant.species}</p>}
 
       <form onSubmit={handleAdd} className={styles.form}>
         <select
@@ -45,6 +59,7 @@ export default function PlantDetailPage() {
           value={form.memo}
           onChange={e => setForm(f => ({ ...f, memo: e.target.value }))}
         />
+        {error && <p className={styles.error}>{error}</p>}
         <button type="submit">水やり記録を追加</button>
       </form>
 

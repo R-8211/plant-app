@@ -11,14 +11,19 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
 
+  const [message, setMessage] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const { error } = isSignUp
+    setMessage('');
+    const { data, error } = isSignUp
       ? await signUp(email, password)
       : await signIn(email, password);
     if (error) {
       setError(error.message);
+    } else if (isSignUp && !data.session) {
+      setMessage('確認メールを送りました。メールのリンクをクリックしてからログインしてください。');
     } else {
       navigate('/');
     }
@@ -45,6 +50,7 @@ export default function LoginPage() {
             required
           />
           {error && <p className={styles.error}>{error}</p>}
+          {message && <p className={styles.message}>{message}</p>}
           <button type="submit">{isSignUp ? '登録' : 'ログイン'}</button>
         </form>
         <button className={styles.toggle} onClick={() => setIsSignUp(v => !v)}>

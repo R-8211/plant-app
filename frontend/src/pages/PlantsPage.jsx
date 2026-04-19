@@ -10,22 +10,32 @@ export default function PlantsPage() {
   const [plants, setPlants] = useState([]);
   const [form, setForm] = useState({ name: '', species: '', watering_interval_days: 7 });
   const [showForm, setShowForm] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getPlants().then(setPlants);
+    getPlants().then(setPlants).catch(() => setError('植物一覧の取得に失敗しました。'));
   }, []);
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    const plant = await createPlant(form);
-    setPlants(prev => [...prev, plant]);
-    setForm({ name: '', species: '', watering_interval_days: 7 });
-    setShowForm(false);
+    setError('');
+    try {
+      const plant = await createPlant(form);
+      setPlants(prev => [...prev, plant]);
+      setForm({ name: '', species: '', watering_interval_days: 7 });
+      setShowForm(false);
+    } catch {
+      setError('植物の追加に失敗しました。');
+    }
   };
 
   const handleDelete = async (id) => {
-    await deletePlant(id);
-    setPlants(prev => prev.filter(p => p.id !== id));
+    try {
+      await deletePlant(id);
+      setPlants(prev => prev.filter(p => p.id !== id));
+    } catch {
+      setError('削除に失敗しました。');
+    }
   };
 
   return (
@@ -43,6 +53,8 @@ export default function PlantsPage() {
           <h2>植物一覧</h2>
           <button onClick={() => setShowForm(v => !v)}>+ 追加</button>
         </div>
+
+        {error && <p className={styles.error}>{error}</p>}
 
         {showForm && (
           <form onSubmit={handleCreate} className={styles.form}>

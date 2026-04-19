@@ -15,7 +15,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+// 植物1件取得
+router.get('/:id', async (req, res) => {
+  try {
+    const { rows } = await db.query(
+      'SELECT * FROM plants WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.userId]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Not found' });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 植物登録
+
 router.post('/', async (req, res) => {
   const { name, species, photo_url, watering_interval_days } = req.body;
   try {
