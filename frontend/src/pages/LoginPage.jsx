@@ -32,8 +32,9 @@ export default function LoginPage() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
+        <div className={styles.logo}>🌿</div>
         <h1 className={styles.title}>Plant App</h1>
-        <h2 className={styles.subtitle}>{isSignUp ? '新規登録' : 'ログイン'}</h2>
+        <p className={styles.subtitle}>{isSignUp ? 'アカウントを作成する' : 'おかえりなさい'}</p>
         <form onSubmit={handleSubmit} className={styles.form}>
           <input
             type="email"

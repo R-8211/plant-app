@@ -1,0 +1,21 @@
+{
+  "name": "Plant App",
+  "short_name": "PlantApp",
+  "description": "植物の水やり管理アプリ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4f0",
+  "theme_color": "#2d6a4f",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
