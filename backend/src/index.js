@@ -9,7 +9,9 @@ const pushRouter = require('./routes/push');
 require('./cron');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+}));
 app.use(express.json());
 
 app.get('/health', (_, res) => res.json({ status: 'ok' }));
