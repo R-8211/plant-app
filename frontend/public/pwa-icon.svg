@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="90" fill="#2d6a4f"/>
+  <!-- Right leaf -->
+  <ellipse cx="296" cy="200" rx="110" ry="75" fill="#52b788" transform="rotate(35 296 200)"/>
+  <!-- Left leaf -->
+  <ellipse cx="216" cy="200" rx="110" ry="75" fill="#74c69d" transform="rotate(-35 216 200)"/>
+  <!-- Center leaf -->
+  <ellipse cx="256" cy="160" rx="70" ry="110" fill="#95d5b2"/>
+  <!-- Stem -->
+  <rect x="248" y="300" width="16" height="120" rx="8" fill="#52b788"/>
+  <!-- Ground line -->
+  <rect x="160" y="400" width="192" height="16" rx="8" fill="#52b788" opacity="0.6"/>
+</svg>

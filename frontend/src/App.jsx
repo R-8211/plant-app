@@ -1,23 +1,33 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
-import LoginPage from './pages/LoginPage';
-import PlantsPage from './pages/PlantsPage';
-import PlantDetailPage from './pages/PlantDetailPage';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const PlantsPage = lazy(() => import('./pages/PlantsPage'));
+const PlantDetailPage = lazy(() => import('./pages/PlantDetailPage'));
+
+function LoadingScreen() {
+  return <div className="loading-screen">読み込み中...</div>;
+}
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div style={{ padding: '2rem' }}>読み込み中...</div>;
+  if (loading) return <LoadingScreen />;
   return user ? children : <Navigate to="/login" replace />;
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<PrivateRoute><PlantsPage /></PrivateRoute>} />
-        <Route path="/plants/:id" element={<PrivateRoute><PlantDetailPage /></PrivateRoute>} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<PrivateRoute><PlantsPage /></PrivateRoute>} />
+            <Route path="/plants/:id" element={<PrivateRoute><PlantDetailPage /></PrivateRoute>} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

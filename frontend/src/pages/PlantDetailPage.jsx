@@ -21,7 +21,7 @@ export default function PlantDetailPage() {
   useEffect(() => {
     getPlant(id).then(setPlant).catch(() => navigate('/'));
     getWaterings(id).then(setWaterings).catch(() => {});
-  }, [id]);
+  }, [id, navigate]);
 
   const handleAdd = async (e) => {
     e.preventDefault();

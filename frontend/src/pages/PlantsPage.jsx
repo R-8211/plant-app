@@ -18,7 +18,7 @@ export default function PlantsPage() {
   const [editForm, setEditForm] = useState({ name: '', species: '', watering_interval_days: 7 });
   const [editImageFile, setEditImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [needsWatering, setNeedsWatering] = useState(new Set());
+  const [needsWatering, setNeedsWatering] = useState(() => new Set());
   const [error, setError] = useState('');
   const { subscribed, loading: pushLoading, subscribe } = usePushNotification();
 
@@ -27,12 +27,6 @@ export default function PlantsPage() {
     client.get('/api/reminders').then(r => {
       setNeedsWatering(new Set(r.data.map(p => p.id)));
     }).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-    }
   }, []);
 
   const openForm = () => { setShowForm(true); setError(''); };
@@ -93,7 +87,7 @@ export default function PlantsPage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerLogo}>
-          <span>🌿</span> Plant App
+          Plant App<span>✦</span>
         </div>
         <div className={styles.headerRight}>
           {!subscribed && (
